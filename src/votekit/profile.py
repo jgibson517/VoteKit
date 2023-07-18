@@ -41,7 +41,7 @@ class PreferenceProfile(BaseModel):
         return list(unique_cands)
 
     # can also cache
-    def num_ballots(self):
+    def num_ballots(self) -> int:
         """
         Assumes weights correspond to number of ballots given to a ranking
         """
@@ -50,6 +50,21 @@ class PreferenceProfile(BaseModel):
             num_ballots += ballot.weight
 
         return num_ballots
+        
+    def to_dict(self) -> dict:
+        '''
+        Converts balots to dictionary with keys, ranking and 
+        and values, total weight per ranking 
+        '''
+        di = {}
+        for ballot in self.ballots:
+            if ballot.ranking not in di.keys():
+                di[ballot.ranking] = ballot.weight
+            else:
+                di[ballot.ranking]+= ballot.weight
+        return di
+
+    
 
     # class Config:
     #     arbitrary_types_allowed = True
